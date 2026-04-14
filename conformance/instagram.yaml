@@ -1,0 +1,77 @@
+platform: instagram
+output_file: instagram.md
+
+rules:
+  - id: slide-count
+    description: "Exactly 5 slides"
+    check: count_sections_matching
+    pattern: "^## SLIDE"
+    exact: 5
+    severity: hard
+
+  - id: required-slots
+    description: "Must have all 5 slot labels in order: Hook, Stat/Claim, Value, Proof, CTA"
+    check: ordered_headings_match
+    expected:
+      - "^## SLIDE 1 — Hook"
+      - "^## SLIDE 2 —"
+      - "^## SLIDE 3 —"
+      - "^## SLIDE 4 —"
+      - "^## SLIDE 5 — CTA"
+    severity: hard
+
+  - id: slide1-word-limit
+    description: "Slide 1 (Hook) ≤ 12 words"
+    check: section_word_count
+    per_section: "^## SLIDE 1"
+    max: 12
+    severity: hard
+
+  - id: slide2-word-limit
+    description: "Slide 2 ≤ 18 words"
+    check: section_word_count
+    per_section: "^## SLIDE 2"
+    max: 18
+    severity: hard
+
+  - id: slide3-word-limit
+    description: "Slide 3 ≤ 30 words"
+    check: section_word_count
+    per_section: "^## SLIDE 3"
+    max: 30
+    severity: hard
+
+  - id: slide4-word-limit
+    description: "Slide 4 ≤ 30 words"
+    check: section_word_count
+    per_section: "^## SLIDE 4"
+    max: 30
+    severity: hard
+
+  - id: slide5-word-limit
+    description: "Slide 5 (CTA) ≤ 15 words"
+    check: section_word_count
+    per_section: "^## SLIDE 5"
+    max: 15
+    severity: hard
+
+  - id: caption-present
+    description: "Must have a `## CAPTION` section with a UTM link"
+    check: section_exists_and_contains
+    pattern: "^## CAPTION"
+    contains: "utm_source=instagram"
+    severity: hard
+
+  - id: caption-length
+    description: "Caption ≤ 300 characters"
+    check: section_char_count
+    per_section: "^## CAPTION"
+    max: 300
+    severity: soft
+
+  - id: visual-direction-present
+    description: "Each slide must include a `[visual: ...]` note for the designer"
+    check: per_section_contains_regex
+    per_section: "^## SLIDE"
+    regex: "\\[visual:"
+    severity: soft

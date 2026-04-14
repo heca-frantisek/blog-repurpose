@@ -1,0 +1,53 @@
+platform: shorts
+output_file: shorts.md
+
+rules:
+  - id: required-sections
+    description: "Must have HOOK, BEAT 1, BEAT 2, BEAT 3, CTA, SHOT LIST, ON-SCREEN TEXT, CAPTION sections"
+    check: all_headings_present
+    expected:
+      - "^## HOOK"
+      - "^## BEAT 1"
+      - "^## BEAT 2"
+      - "^## BEAT 3"
+      - "^## CTA"
+      - "^## SHOT LIST"
+      - "^## ON-SCREEN TEXT"
+      - "^## CAPTION"
+    severity: hard
+
+  - id: hook-word-limit
+    description: "HOOK ≤ 18 words (must be readable in ≤3 seconds)"
+    check: section_word_count
+    per_section: "^## HOOK"
+    max: 18
+    severity: hard
+
+  - id: beats-word-limit
+    description: "Each BEAT is one idea — 15-55 words"
+    check: per_section_word_count
+    per_section: "^## BEAT"
+    min: 15
+    max: 55
+    severity: soft
+
+  - id: caption-length
+    description: "CAPTION ≤ 200 characters"
+    check: section_char_count
+    per_section: "^## CAPTION"
+    max: 200
+    severity: hard
+
+  - id: cta-present
+    description: "CTA must be concrete (contains 'link in bio', 'search', 'github', or URL)"
+    check: section_contains_any
+    per_section: "^## CTA"
+    any_of: ["link in bio", "Link in bio", "Search Shopsys", "github.com/shopsys", "shopsys.com"]
+    severity: hard
+
+  - id: shot-list-bullets
+    description: "SHOT LIST uses bullets (at least 3)"
+    check: section_bullet_count
+    per_section: "^## SHOT LIST"
+    min: 3
+    severity: soft

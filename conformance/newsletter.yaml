@@ -1,0 +1,66 @@
+platform: newsletter
+output_file: newsletter.md
+
+rules:
+  - id: required-sections
+    description: "Must have SUBJECT LINE, PREVIEW TEXT, SECTION BODY"
+    check: all_headings_present
+    expected:
+      - "^## SUBJECT LINE"
+      - "^## PREVIEW TEXT"
+      - "^## SECTION BODY"
+    severity: hard
+
+  - id: subject-length
+    description: "Subject line < 50 characters"
+    check: section_char_count
+    per_section: "^## SUBJECT LINE"
+    max: 50
+    severity: hard
+
+  - id: preview-length
+    description: "Preview text < 90 characters"
+    check: section_char_count
+    per_section: "^## PREVIEW TEXT"
+    max: 90
+    severity: hard
+
+  - id: subject-no-emoji
+    description: "Subject must not contain emoji (spam filter trigger)"
+    check: section_emoji_count
+    per_section: "^## SUBJECT LINE"
+    max: 0
+    severity: hard
+
+  - id: body-word-count
+    description: "SECTION BODY is 180-260 words"
+    check: section_word_count
+    per_section: "^## SECTION BODY"
+    min: 180
+    max: 260
+    severity: hard
+
+  - id: bullets-present
+    description: "SECTION BODY contains 3-5 bullet highlights"
+    check: section_bullet_count
+    per_section: "^## SECTION BODY"
+    min: 3
+    max: 5
+    severity: hard
+
+  - id: cta-link
+    description: "SECTION BODY contains a UTM link"
+    check: section_contains
+    per_section: "^## SECTION BODY"
+    contains: "utm_source=newsletter"
+    severity: hard
+
+  - id: no-greeting
+    description: "No 'Hi there', 'Dear subscriber' etc."
+    check: section_not_contains_any
+    per_section: "^## SECTION BODY"
+    forbidden:
+      - "Hi there"
+      - "Dear subscriber"
+      - "Hello friends"
+    severity: soft

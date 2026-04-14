@@ -1,0 +1,47 @@
+platform: twitter
+output_file: twitter.md
+
+rules:
+  - id: tweet-count
+    description: "Thread must be 5-9 tweets (lines starting with `N/`)"
+    check: count_lines_matching
+    pattern: "^\\d+/"
+    min: 5
+    max: 9
+    severity: hard
+
+  - id: per-tweet-length
+    description: "Each tweet ≤ 280 characters including the `N/` prefix and URL"
+    check: each_matching_line_length
+    pattern: "^\\d+/"
+    max: 280
+    severity: hard
+
+  - id: cta-link-present
+    description: "Final tweet must contain utm_source=twitter"
+    check: last_matching_line_contains
+    pattern: "^\\d+/"
+    contains: "utm_source=twitter"
+    severity: hard
+
+  - id: hashtag-discipline
+    description: "At most 1 hashtag across the entire thread"
+    check: total_hashtag_count
+    max: 1
+    severity: soft
+
+  - id: one-link-only
+    description: "Exactly one URL in the whole thread (in the CTA tweet)"
+    check: url_count
+    exact: 1
+    severity: hard
+
+  - id: no-banned-openers
+    description: "Tweet 1 must not open with marketing clichés"
+    check: first_matching_line_not_starts_with_any
+    pattern: "^1/"
+    forbidden_prefixes:
+      - "1/ 🚀"
+      - "1/ Excited"
+      - "1/ Thrilled"
+    severity: soft

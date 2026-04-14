@@ -1,0 +1,60 @@
+platform: linkedin
+output_file: linkedin.md
+
+rules:
+  - id: post-count
+    description: "Must produce 2 or 3 LinkedIn posts, each as a `## LINKEDIN POST N` section"
+    check: count_sections_matching
+    pattern: "^## LINKEDIN POST"
+    min: 2
+    max: 3
+    severity: hard
+
+  - id: hook-length
+    description: "First two non-empty lines of each post body ≤ 220 characters combined (LinkedIn preview cutoff)"
+    check: per_section_first_two_lines_chars
+    per_section: "^## LINKEDIN POST"
+    max: 220
+    severity: hard
+
+  - id: body-word-count
+    description: "Each post body is 80-220 words"
+    check: per_section_word_count
+    per_section: "^## LINKEDIN POST"
+    min: 80
+    max: 220
+    severity: hard
+
+  - id: hashtag-limit
+    description: "At most 3 hashtags per post"
+    check: per_section_hashtag_count
+    per_section: "^## LINKEDIN POST"
+    max: 3
+    severity: hard
+
+  - id: cta-link-present
+    description: "Each post must contain a link with utm_source=linkedin"
+    check: per_section_contains
+    per_section: "^## LINKEDIN POST"
+    contains: "utm_source=linkedin"
+    severity: hard
+
+  - id: no-banned-openers
+    description: "Hook must not open with marketing clichés"
+    check: per_section_first_line_not_starts_with_any
+    per_section: "^## LINKEDIN POST"
+    forbidden_prefixes:
+      - "🚀"
+      - "Excited to"
+      - "I'm excited"
+      - "We're excited"
+      - "Thrilled to"
+      - "Proud to announce"
+    severity: soft
+
+  - id: no-emoji-spam
+    description: "At most 2 emoji per post total"
+    check: per_section_emoji_count
+    per_section: "^## LINKEDIN POST"
+    max: 2
+    severity: soft

@@ -1,0 +1,66 @@
+platform: devto
+output_file: devto.md
+
+rules:
+  - id: required-sections
+    description: "Must have TITLE, TAGS, COVER BLURB, ARTICLE BODY"
+    check: all_headings_present
+    expected:
+      - "^## TITLE"
+      - "^## TAGS"
+      - "^## COVER BLURB"
+      - "^## ARTICLE BODY"
+    severity: hard
+
+  - id: title-length
+    description: "Title ≤ 70 characters"
+    check: section_char_count
+    per_section: "^## TITLE"
+    max: 70
+    severity: hard
+
+  - id: tags-count
+    description: "3-4 dev.to tags"
+    check: section_comma_separated_count
+    per_section: "^## TAGS"
+    min: 3
+    max: 4
+    severity: hard
+
+  - id: blurb-length
+    description: "COVER BLURB ≤ 180 characters"
+    check: section_char_count
+    per_section: "^## COVER BLURB"
+    max: 180
+    severity: hard
+
+  - id: article-body-word-count
+    description: "ARTICLE BODY is 500-900 words"
+    check: section_word_count
+    per_section: "^## ARTICLE BODY"
+    min: 500
+    max: 900
+    severity: hard
+
+  - id: code-block-present
+    description: "ARTICLE BODY must contain at least one fenced code block with language tag"
+    check: section_regex_matches
+    per_section: "^## ARTICLE BODY"
+    regex: "```(php|graphql|yaml|sh|bash|js|ts|json)"
+    min: 1
+    severity: hard
+
+  - id: headings-present
+    description: "ARTICLE BODY must contain at least 2 H3 sub-headings"
+    check: section_regex_matches
+    per_section: "^## ARTICLE BODY"
+    regex: "^### "
+    min: 2
+    severity: soft
+
+  - id: cta-link
+    description: "ARTICLE BODY contains a utm_source=devto link"
+    check: section_contains
+    per_section: "^## ARTICLE BODY"
+    contains: "utm_source=devto"
+    severity: hard
