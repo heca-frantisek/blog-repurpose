@@ -1,0 +1,64 @@
+{
+  "title": "Release Highlights 18.0.0",
+  "url": "https://www.shopsys.com/release-highlights-18-0-0/",
+  "author": "Rostislav Vítek",
+  "date": "2025-12-30",
+  "slug": "release-highlights-18-0-0",
+  "core_thesis": "Shopsys 18.0.0 modernizes the admin (replacing a legacy custom theme with Tabler UI and cutting ~12,000 lines), ships merchant-facing promotional and compliance tooling (gifts, X+Y free, EU cooling-off withdrawal, QR bank transfers), and removes checkout/API friction via async email preparation and a 70-80% payload cut on product detail GraphQL.",
+  "target_audience": [
+    "ecommerce CTOs and platform leads",
+    "senior Symfony/PHP backend engineers",
+    "head of digital / ecommerce directors evaluating platform ROI",
+    "merchants running multi-domain, multi-locale stores",
+    "EU-regulated retailers needing consumer protection compliance"
+  ],
+  "stats": [
+    {"value": "18.0.0", "claim": "Current Shopsys Platform release version", "context": "Release title"},
+    {"value": "~12,000", "claim": "Lines of legacy admin code removed via Tabler UI migration", "context": "Administration Overhaul (#3813)"},
+    {"value": "70-80%", "claim": "Payload reduction for store availability data in product detail GraphQL queries", "context": "Reduced Product Detail Data Transfer (#4324)"},
+    {"value": "14 days", "claim": "Typical configurable withdrawal deadline after delivery", "context": "Order Withdrawal from Contract (#4246)"},
+    {"value": "3 + 1", "claim": "Example volume-based promotion pattern (pay for 3, get the 4th free)", "context": "Promotion X + Y for Free (#4194)"},
+    {"value": "1-2 characters", "claim": "Short-query search now returns basic name-based matches where previously it showed none", "context": "Autocomplete Favorites (#4215)"}
+  ],
+  "quotes": [
+    {"text": "Reduced codebase by approximately 12 000 lines of legacy code", "context": "Bullet point summarizing the impact of the Tabler UI admin overhaul"},
+    {"text": "This can reduce payload size by 70-80% for store availability data, resulting in faster API responses and improved (not only) mobile performance", "context": "Describing the GraphQL product detail optimization"},
+    {"text": "The preparation step has now been moved out of the critical path, resulting in faster order creation and a lower risk of checkout failures.", "context": "Asynchronous Order Email Preparation rationale"},
+    {"text": "Czech characters (č, ř, š, ž) now sort correctly when a Czech administrator is logged in", "context": "Locale-specific collation in Grid DataSources"}
+  ],
+  "features": [
+    {"name": "Administration Overhaul (Tabler UI)", "benefit_line": "A modern, responsive admin that replaces the custom legacy theme and is cheaper to maintain.", "proof": "Full redesign on Tabler UI framework, ~12,000 lines of legacy code removed, reworked modals, form templates, utility JS, and status colors (#3813)"},
+    {"name": "Product Gift", "benefit_line": "Run gift-with-purchase campaigns that slot cleanly into cart, checkout, and emails.", "proof": "Configurable gift plans with validity periods, per-domain gift pricing, automatic 'Gift with Product' flagging, real-time cart updates, appearance in order summaries and confirmation emails (#4193)"},
+    {"name": "Promotion X + Y for Free", "benefit_line": "Volume promos like '3 + 1 free' set directly on products to lift average order value.", "proof": "Per-product volume promotions, automatic flagging, multi-domain support, asynchronous flag updates (#4194)"},
+    {"name": "Order Withdrawal from Contract", "benefit_line": "Built-in EU cooling-off compliance so customers can withdraw eligible orders from their account.", "proof": "Configurable withdrawal deadline (typically 14 days), per-domain instructions, new 'Withdrawn' order status, email notifications to customer and admin (#4246)"},
+    {"name": "QR Payment for Bank Transfers", "benefit_line": "A bank transfer method where customers pay by scanning a QR code from their banking app.", "proof": "Embedded QR codes with IBAN, amount, and variable symbol in confirmation emails and order pages; per-domain account/IBAN/BIC configuration and dynamic placeholders (#4195)"},
+    {"name": "Prevent Exceeding Available Stock", "benefit_line": "Kill overselling on products where stock accuracy actually matters.", "proof": "New 'Allow negative stock' per-product option; when disabled, cart quantities auto-adjust to available stock and the customer is notified (#4173)"},
+    {"name": "Autocomplete Favorites", "benefit_line": "Curate what shows up before a customer types, and actually return something for 1-2 character queries.", "proof": "Admin-configurable favorite products, brands, and categories on autocomplete focus; simplified name-based search for short queries (#4215)"},
+    {"name": "Domain Configuration with Path Fragment", "benefit_line": "Run all locales under one domain (example.com/cz, example.com/sk) instead of juggling subdomains.", "proof": "Path-based multi-domain URL structure, fewer hostnames to manage, simpler SEO signal for unified site structure (#4113)"},
+    {"name": "Symfony Clock Integration", "benefit_line": "Deterministic time across the codebase — no more flaky time-dependent tests.", "proof": "Direct DateTime and DateTimeImmutable usage replaced with Symfony Clock across the codebase, full control over 'now' in tests (#4297)"},
+    {"name": "DataSource Factories with Collation Support", "benefit_line": "Grids sort correctly in the administrator's language — including Czech diacritics.", "proof": "Factory pattern for all Grid DataSources; QueryBuilderDataSources auto-apply locale-specific collation so č, ř, š, ž sort correctly for Czech admins (#4135)"},
+    {"name": "Asynchronous Order Email Preparation", "benefit_line": "Checkout no longer waits on template rendering and variable resolution.", "proof": "Email preparation moved out of the checkout critical path (previously only sending was deferred), reducing risk of checkout failures (#4266)"},
+    {"name": "Reduced Product Detail Data Transfer", "benefit_line": "Faster product detail API responses, especially on mobile.", "proof": "GraphQL product detail returns only necessary store availability fields instead of full store info — 70-80% smaller payload for that data (#4324)"},
+    {"name": "Storefront Design & Accessibility Pass", "benefit_line": "Sharper storefront UX, clearer layouts, and better a11y in the places customers actually touch.", "proof": "Order list thumbnails (#4213), new WYSIWYG text styles in CKEditor (#4208), redesigned contact info (#4221) and reset password (#4254) pages, refined autocomplete and navigation UX (#4215, #4230), banner slider and cart loading accessibility fixes (#4158, #4155), smoother scrolling on order/complaint pages (#4189), unified product image gallery (#4273)"}
+  ],
+  "stories": [
+    {"hook": "We deleted ~12,000 lines of admin code and shipped a better admin.", "tension": "The legacy custom-built admin theme had accumulated years of bespoke code that was expensive to maintain and felt dated on mobile.", "resolution": "18.0.0 replaces it with the Tabler UI framework — responsive across devices, standardized form templates, reworked modals and utility JS — with a net ~12,000-line reduction."},
+    {"hook": "Checkout got faster because we moved email out of the critical path — for real this time.", "tension": "Previously, only email sending was async; the template loading and variable resolution still ran synchronously during order placement, silently slowing checkout and adding failure risk.", "resolution": "Order email preparation is now fully asynchronous (#4266), so order creation is faster and more resilient."},
+    {"hook": "A single GraphQL field change cut product detail payloads by 70-80%.", "tension": "Product detail queries were returning full store information when all the frontend actually needed was availability per store — heavy on mobile, pointless on the wire.", "resolution": "Store availability in the product detail query now returns only what's needed (#4324), trimming 70-80% off that payload."},
+    {"hook": "EU cooling-off rights are now a first-class feature, not a custom patch.", "tension": "Consumer-protection withdrawal (the 14-day cooling-off period) is legally required across the EU but has typically been bolted on per-project.", "resolution": "18.0.0 ships Order Withdrawal from Contract (#4246) with a configurable deadline, per-domain instructions, a dedicated 'Withdrawn' order status, and notifications on both sides."},
+    {"hook": "Flaky time-dependent tests have a single, boring root cause — and we fixed it.", "tension": "Direct DateTime / DateTimeImmutable usage scattered across a large Symfony codebase makes 'now' impossible to control in tests.", "resolution": "Symfony Clock is now the codebase-wide standard (#4297), enabling deterministic testing and killing a whole category of flaky tests."}
+  ],
+  "takeaways": [
+    "Dev: 18.0.0 is a cleanup release in the best sense — Symfony Clock everywhere, factory-based Grid DataSources with locale-aware collation, async order email preparation, and a leaner admin built on Tabler UI instead of a custom theme.",
+    "Merchant: You get the promotional and compliance features customers expect out of the box — gift-with-purchase, X+Y free volume promos, QR-coded bank transfers, strict stock control, and EU-compliant order withdrawal — without custom development.",
+    "Business: A modern responsive admin, 70-80% lighter product detail payloads, and faster checkout mean less platform drag on conversion and lower ongoing maintenance cost on a mid-to-enterprise footprint."
+  ],
+  "cta_options": [
+    "Read the full v18.0.0 release notes: https://github.com/shopsys/shopsys/releases/tag/v18.0.0",
+    "Explore the Shopsys Platform: https://www.shopsys.com/shopsys-platform/",
+    "Dive into the 18.0 docs: https://docs.shopsys.com/en/18.0/",
+    "Join the conversation on GitHub Discussions: https://github.com/shopsys/shopsys/discussions",
+    "Submit an issue: https://github.com/shopsys/shopsys/issues/new/choose",
+    "Open a pull request: https://github.com/shopsys/shopsys/compare"
+  ]
+}
