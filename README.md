@@ -124,8 +124,4 @@ Live example: [`output/release-highlights-18-0-0/`](output/release-highlights-18
 - **Auto-trigger on new blog post?** Point a local launchd job at the blog's RSS feed; when a new entry lands, run `claude -p "/blog-repurpose <url>" --allowedTools "WebFetch,Read,Write,Task"` headlessly. Outputs land in `output/<slug>/` for human review.
 - **Measure what wins?** UTMs are already baked in per channel. Pull analytics by `utm_campaign=<slug>` and feed the winners back into `platforms/<x>.md`. Next run writes to the proven pattern.
 
-## Credits
-
-Inspired by patterns in [shopsys/automation-handbook](https://github.com/shopsys/project-base) — specifically: deterministic orchestrator + AI steps, executable conformance suites, intent-driven development, and bounded Ralph loops.
-
 Built with [Claude Code](https://claude.com/claude-code).
